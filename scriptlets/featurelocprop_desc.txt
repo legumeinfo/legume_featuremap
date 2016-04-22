@@ -1,0 +1,48 @@
+array (
+  'table' => 'featurelocprop',
+  'fields' => array(
+    'featurelocprop_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'featureloc_id' => array(
+      'type' =>'int',
+      'not null' => TRUE,
+    ),
+    'type_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'value' => array(
+      'type' => 'text',
+      'not null' => FALSE,
+    ),
+    'rank' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+  ),
+  'indexes' => array(
+    'featurelocprop_indx0' => array('featureloc_id'),
+    'featurelocprop_indx2' => array('type_id'),
+  ),
+  'foreign keys' => array(
+    'featureloc_id' => array(
+      'table' => 'featureloc',
+      'columns' => array('featureloc_id' => 'featureloc_id'),
+     ),
+    'type_id' => array(
+      'table' => 'cvterm',
+      'columns' => array('type_id' => 'cvterm_id'),
+     ),
+  ),
+  'unique keys' => array(
+    'featurelocprop_c1' => array(
+      'featureloc_id',
+      'type_id',
+      'rank'
+    ),
+  ),
+  'primary key' => array('featurelocprop_id'),
+)
+

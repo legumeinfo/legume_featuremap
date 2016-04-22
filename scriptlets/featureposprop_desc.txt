@@ -1,0 +1,47 @@
+array (
+  'table' => 'featureposprop',
+  'fields' => array(
+    'featureposprop_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'featurepos_id' => array(
+      'type' =>'int',
+      'not null' => TRUE,
+    ),
+    'type_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'value' => array(
+      'type' => 'text',
+      'not null' => FALSE,
+    ),
+    'rank' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+  ),
+  'indexes' => array(
+    'featurepos_id_indx0' => array('featurepos_id'),
+    'featurepos_id_indx2' => array('type_id'),
+  ),
+  'foreign keys' => array(
+    'featurepos_id' => array(
+      'table' => 'featurepos',
+      'columns' => array('featurepos_id' => 'featurepos_id'),
+     ),
+    'type_id' => array(
+      'table' => 'cvterm',
+      'columns' => array('type_id' => 'cvterm_id'),
+     ),
+  ),
+  'unique keys' => array(
+    'featureposprop_c1' => array(
+      'featurepos_id',
+      'type_id',
+      'rank'
+    ),
+  ),
+  'primary key' => array('featureposprop_id'),
+)

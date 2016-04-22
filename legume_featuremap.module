@@ -1,0 +1,56 @@
+<?php
+/**
+ * @file
+ * This file contains all Drupal hooks for the module other than any
+ * node hooks and block hooks. Those go in the [module name].chado_node.inc file
+ * and [module_name].blocks.inc respectively
+ *
+ * @ingroup legume_featuremap
+ */
+
+function legume_featuremap_theme($existing, $type, $theme, $path) {
+  $core_path = drupal_get_path('module', 'legume_featuremap');
+
+  $items = array(
+    'tripal_featuremap_base' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'tripal_featuremap_base',
+      'path' => "$path/theme/templates",
+    ),
+    'tripal_featuremap_featurepos' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'tripal_featuremap_featurepos',
+      'path' => "$path/theme/templates",
+    ),
+    'tripal_featuremap_publication' => array(
+      'variables' => array('node' => NULL),
+      'template' => 'tripal_featuremap_publication',
+      'path' => "$path/theme/templates",
+    ),
+  );
+  
+  return $items;
+}
+
+
+/**
+  * hook_form_alter
+  *
+  * Add a validator to the search form.
+  */
+function legume_featuremap_form_alter(&$form, &$form_state, $form_id) {
+  if ($form_id == 'views_exposed_form') {
+    $form['#validate'][] = 'legume_featuremap_form_validate';
+  }
+} 
+
+
+/**
+  * Form validator for search form. 
+  * Use this to trim whitespace from text fields.
+  */
+function legume_featuremap_form_validate($form, &$form_state) {
+  $form_state['values']['name_1']      = trim($form_state['values']['name_1']);
+  $form_state['values']['description'] = trim($form_state['values']['description']);
+}
+

@@ -1,0 +1,52 @@
+array (
+  'table' => 'feature_stock',
+  'fields' => array(
+    'feature_stock_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'feature_id' => array(
+      'type' =>'int',
+      'not null' => TRUE,
+    ),
+    'stock_id' => array(
+      'type' =>'int',
+      'not null' => TRUE,
+    ),
+    'type_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'rank' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+  ),
+  'indexes' => array(
+    'feature_stock_indx0' => array('feature_id'),
+    'feature_stock_indx2' => array('stock_id'),
+  ),
+  'foreign keys' => array(
+    'feature_id' => array(
+      'table' => 'feature',
+      'columns' => array('feature_id' => 'feature_id'),
+     ),
+    'stock_id' => array(
+      'table' => 'stock',
+      'columns' => array('stock_id' => 'stock_id'),
+     ),
+    'type_id' => array(
+      'table' => 'cvterm',
+      'columns' => array('type_id' => 'cvterm_id'),
+     ),
+  ),
+  'unique keys' => array(
+    'feature_stock_c1' => array(
+      'feature_id',
+      'stock_id',
+      'type_id',
+      'rank'
+    ),
+  ),
+  'primary key' => array('feature_stock_id'),
+)

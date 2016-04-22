@@ -1,0 +1,12 @@
+name = Legume Featuremap
+description = Customization of the Tripal featuremap modules for PeanutBase and LegumeInfo. 
+core = 7.x
+version = 7.x-2.0.1-alpha
+package = Tripal Extensions 
+configure = admin/tripal/legume/legume_featuremap
+
+stylesheets[all][] = theme/css/legume_featuremap.css
+
+dependencies[] = tripal_core
+dependencies[] = tripal_featuremap
+dependencies[] = tripal_views

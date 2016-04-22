@@ -1,0 +1,29 @@
+array (
+  'table' => 'featuremap_stock',
+  'fields' => array(
+    'featuremap_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'stock_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+  ),
+  'indexes' => array(
+    'featuremap_stock_indx0' => array('featuremap_id'),
+    'featuremap_stock_indx2' => array('stock_id'),
+  ),
+  'foreign keys' => array(
+    'featuremap_id' => array(
+      'table' => 'featuremap',
+      'columns' => array('featuremap_id' => 'featuremap_id'),
+     ),
+    'stock_id' => array(
+      'table' => 'stock',
+      'columns' => array('stock_id' => 'stock_id'),
+     ),
+  ),
+  'primary key' => array('featuremap_stock_id'),
+)
+

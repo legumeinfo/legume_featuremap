@@ -1,0 +1,39 @@
+array (
+  'table' => 'feature_project',
+  'fields' => array(
+    'feature_project_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'project_id' => array(
+      'type' =>'int',
+      'not null' => TRUE,
+    ),
+    'rank' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+  ),
+  'indexes' => array(
+    'feature_project_indx0' => array('feature_id'),
+    'feature_project_indx2' => array('project_id'),
+  ),
+  'foreign keys' => array(
+    'feature_id' => array(
+      'table' => 'feature',
+      'columns' => array('feature_id' => 'feature_id'),
+     ),
+    'project_id' => array(
+      'table' => 'project',
+      'columns' => array('project_id' => 'project_id'),
+     ),
+  ),
+  'unique keys' => array(
+    'feature_project_c1' => array(
+      'project_id',
+      'type_id',
+      'rank'
+    ),
+  ),
+  'primary key' => array('feature_project_id'),
+)

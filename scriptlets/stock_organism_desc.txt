@@ -1,0 +1,43 @@
+array (
+  'table' => 'stock_organism',
+  'fields' => array(
+    'stock_organism_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'stock_id' => array(
+      'type' =>'int',
+      'not null' => TRUE,
+    ),
+    'organism_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+    'rank' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
+  ),
+  'indexes' => array(
+    'stock_organism_indx0' => array('stock_id'),
+    'stock_organism_indx2' => array('organism_id'),
+  ),
+  'foreign keys' => array(
+    'stock_id' => array(
+      'table' => 'stock',
+      'columns' => array('stock_id' => 'stock_id'),
+     ),
+    'organism_id' => array(
+      'table' => 'organism',
+      'columns' => array('organism_id' => 'organism_id'),
+     ),
+  ),
+  'unique keys' => array(
+    'stock_organism_c1' => array(
+      'stock_id',
+      'organism_id',
+      'rank'
+    ),
+  ),
+  'primary key' => array('stock_organism_id'),
+)
