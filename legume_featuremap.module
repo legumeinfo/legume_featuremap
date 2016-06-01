@@ -39,10 +39,13 @@ function legume_featuremap_theme($existing, $type, $theme, $path) {
   * Add a validator to the search form.
   */
 function legume_featuremap_form_alter(&$form, &$form_state, $form_id) {
-  if ($form_id == 'views_exposed_form') {
+  if ($form_id == 'views_exposed_form' && strstr($form['#id'], 'map')) {
     $form['#validate'][] = 'legume_featuremap_form_validate';
+    
+    // Change default value for submit button
+    $form['submit']['#value'] = 'Search';
   }
-} 
+}//legume_featuremap_form_alter
 
 
 /**
