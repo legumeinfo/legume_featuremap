@@ -57,3 +57,37 @@ function legume_featuremap_form_validate($form, &$form_state) {
   $form_state['values']['description'] = trim($form_state['values']['description']);
 }
 
+
+/**
+  * getMapStocks()
+  *
+  * @param $map_id
+  */
+function getMapStocks($map_id) {
+  $stocks = false;
+  
+  $sql = "
+    SELECT s.stock_id, s.name AS mapping_population, cs.nid AS mapping_population_nid,
+           parent1.name AS parent1, cs1.nid AS parent1_nid, parent2.name AS parent2, 
+           cs2.nid AS parent2_nid
+    FROM {featuremap_stock} fs
+      INNER JOIN {stock} s ON s.stock_id=fs.stock_id
+      INNER JOIN chado_stock cs ON cs.stock_id=s.stock_id
+      
+      LEFT OUTER JOIN {stock_relationship} sr1
+        ON sr1.object_id=s.stock_id AND sr1.type_id=(SELECT cvterm_id FROM {cvterm} WHERE name='Parent1')
+      LEFT OUTER JOIN {stock} parent1 ON parent1.stock_id=sr1.subject_id
+      LEFT OUTER JOIN chado_stock cs1 ON cs1.stock_id=parent1.stock_id
+      
+      LEFT OUTER JOIN {stock_relationship} sr2
+        ON sr2.object_id=s.stock_id AND sr2.type_id=(SELECT cvterm_id FROM {cvterm} WHERE name='Parent2')
+      LEFT OUTER JOIN {stock} parent2 ON parent2.stock_id=sr2.subject_id
+      LEFT OUTER JOIN chado_stock cs2 ON cs2.stock_id=parent2.stock_id
+    WHERE featuremap_id=$map_id";
+  if ($res = chado_query($sql, array())) {
+    $stocks = $res->fetchObject();
+  }
+  
+  return $stocks;
+}
+
