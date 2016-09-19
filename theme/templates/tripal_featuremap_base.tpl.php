@@ -4,20 +4,23 @@ $featuremap  = $variables['node']->featuremap;
 
 // expand the description field
 $featuremap = chado_expand_var($featuremap, 'field', 'featuremap.description');
-
-// CUSTOMIZE: add properties to this page
+//echo "<pre>";var_dump($featuremap);echo "</pre>";
 
 // So that chado variables are returned in an array
 $options = array('return_array' => 1);
 
 $featuremap = chado_expand_var($featuremap, 'table', 'featuremapprop', $options);
 $properties = $featuremap->featuremapprop;
+//echo "<pre>";var_dump($properties);echo "</pre>";
 $more_rows = array();
 foreach ($properties as $property) {
   $property = chado_expand_var($property,'field','featuremapprop.value');
   $prop_type = $property->type_id->name;
   $more_rows[$prop_type] = $value = urldecode($property->value);
 }
+
+// Get stocks related to this map
+$stocks = getMapStocks($featuremap->featuremap_id);
 ?>
 
 <div class="tripal_featuremap-data-block-desc tripal-data-block-desc"></div> <?php 
@@ -45,7 +48,7 @@ $rows[] = array(
   $featuremap->name
 );
 
-// CUSTOMIZATION: add publication map name here
+// Publication publication map name
 $rows[] = array(
   array(
     'data' => 'Publication Map Name',
@@ -64,7 +67,7 @@ $rows[] = array(
 );
 
 
-// CUSTOMIZATION: CMap link
+// CMap link
 $cmap_link = 'none';
 $featuremap = chado_expand_var($featuremap, 'table', 'featuremap_dbxref', $options);
 $dbxrefs = $featuremap->featuremap_dbxref;
@@ -85,7 +88,7 @@ $rows[] = array(
 );
 
 
-// CUSTOMIZATION: get species from mapping population
+// Get species from mapping population
 $species_array = array();
 $args = array('featuremap_id' => $featuremap->featuremap_id);
 $featuremap_stock = chado_generate_var('featuremap_stock', $args);
@@ -96,7 +99,6 @@ if ($stock = $featuremap_stock->stock_id) {
   if ($stock_organisms && count($stock_organisms) > 0) {
     foreach ($stock_organisms as $stock_organism) {
       $organism = $stock_organism->organism_id;
-//echo "organism: <pre>";var_dump($organism);echo "</pre>";
       $species_array[] = $organism->genus . ' ' . $organism->species; 
     }
   }
@@ -121,7 +123,59 @@ $rows[] = array(
   '<i>' . implode($species_array, ', ') . '</i>'
 );
 
-// CUSTOM: add pre-defined property fields here
+// Show mapping population
+$mapping_population = "unknown";
+if ($stocks->mapping_population) {
+  if ($stocks->mapping_population_nid) {
+    $mapping_population = l($stocks->mapping_population, '/node/'.$stocks->mapping_population_nid);
+  }
+  else {
+    $mapping_population = $stocks['mapping_population'];
+  }
+}
+$rows[] = array(
+  array(
+    'data' => 'Mapping population',
+    'header' => TRUE
+  ),
+  $mapping_population
+);
+
+// Show mapping population parents
+$parent1 = "unknown";
+if ($stocks->parent1) {
+  if ($stocks->parent1_nid) {
+    $parent1 = l($stocks->parent1, '/node/'.$stocks->parent1_nid);
+  }
+  else {
+    $parent1 = $stocks['parent1'];
+  }
+}
+$rows[] = array(
+  array(
+    'data' => 'Parent 1',
+    'header' => TRUE,
+  ),
+  $parent1
+);
+$parent2 = "unknown";
+if ($stocks->parent2) {
+  if ($stocks->parent2_nid) {    
+    $parent2 = l($stocks->parent2, '/node/'.$stocks->parent2_nid);
+  } 
+  else {
+    $parent2 = $stocks['parent2'];
+  }
+}
+$rows[] = array(
+  array(
+    'data' => 'Parent 2',
+    'header' => TRUE,
+  ),
+  $parent2
+);
+
+// Add pre-defined property fields here
 $rows[] = array(
   array(
     'data' => 'Population Size',
