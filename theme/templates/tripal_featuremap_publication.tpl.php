@@ -1,4 +1,5 @@
 <?php
+/*eksc: not used
 $featuremap = $variables['node']->featuremap;
 
 // expand featuremap to include pubs 
@@ -88,3 +89,4 @@ if (count($featuremap_pubs) > 0) { ?>
   // function to generate the table.
   print theme_table($table);  
 }
+*/
