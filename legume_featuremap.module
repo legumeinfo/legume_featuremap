@@ -59,6 +59,59 @@ function legume_featuremap_form_validate($form, &$form_state) {
 
 
 /**
+  * Modify view results before display. 
+  */
+function legume_featuremap_views_pre_render(&$view) {
+  if ($view->name == 'tripal_featuremap_user_featuremaps') {
+    // Remove map units column from results
+    $view->field['name_1']->options['exclude'] = true;
+
+  }
+}
+
+function legume_featuremap_views_query_alter($view, $query) {
+//drupal_set_message("<pre>" . print_r($view, true) . "</pre>");
+  if ($view->name == 'tripal_featuremap_user_featuremaps') {
+/*would like to add citation, but unable to see how; leave this code in case a 
+  solution is found.
+    // Add citation to query via featuremap_pub
+    $join = new views_join();
+    $join->table      = 'featuremap_pub';
+    $join->field      = 'featuremap_id';
+    $join->left_table = 'featuremap';
+    $join->left_field = 'featuremap_id';
+    $join->alias      = 'featuremap_pub';
+    $join->type       = 'LEFT';
+    $join->extra      = array(
+      array('field' => 'pub_id', 'value' => $pub_id),
+    );
+    $query->add_relationship('featuremap_pub', $join, 'featuremap_pub');
+    
+    $join = new views_join();
+    $join->table      = 'pub';
+    $join->field      = 'pub_id';
+    $join->left_table = 'featuremap_pub';
+    $join->left_field = 'pub_id';
+    $join->alias      = 'pub';
+    $join->type       = 'LEFT';
+    $join->extra      = array(
+      array('field' => 'pub_id', 'uniquename' => $citation),
+    );
+    $query->add_relationship('pub', $join, 'pub');
+    
+    $query->fields['pub'] = array(
+      'field' => 'uniquename',
+      'table' => 'pub',
+      'alias' => 'citation',
+    );
+*/
+    // Only want one of each map found
+    $query->set_distinct(true, true);
+  }
+}
+
+
+/**
   * getMapStocks()
   *
   * @param $map_id
