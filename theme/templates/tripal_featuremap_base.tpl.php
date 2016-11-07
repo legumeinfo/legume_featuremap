@@ -210,18 +210,14 @@ $pubs = array();
 $featuremap = chado_expand_var($featuremap, 'table', 'featuremap_pub', $options);
 //drupal_set_message("<pre>" . print_r($featuremap->featuremap_pub[0]->pub_id, true) . "</pre>");
 $featuremap_pubs = $featuremap->featuremap_pub;
-//drupal_set_message("<pre>" . print_r($featuremap_pubs, true) . "</pre>");
 foreach ($featuremap_pubs as $featuremap_pub) {
   $pub = $featuremap_pub->pub_id;
   $pub = chado_expand_var($pub, 'field', 'pub.title');
   $citation = $pub->uniquename;
   $title = $pub->title;
   $nid = $pub->nid;
-drupal_set_message("$citation - $title ($nid)");
-//  $pub = chado_expand_var($pub, 'table', 'public.chado_pub', $options);
-//drupal_set_message("nid: <pre>" . print_r($pub, true) . "</pre>");
   $url = "/node/$nid";
-  $html = l($citation, $url) . ": $title";
+  $html = l($citation, $url) . ": $title.";
   array_push($pubs, $html);
 }
 $rows[] = array(
