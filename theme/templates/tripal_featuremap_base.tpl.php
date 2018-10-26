@@ -4,14 +4,13 @@ $featuremap  = $variables['node']->featuremap;
 
 // expand the description field
 $featuremap = chado_expand_var($featuremap, 'field', 'featuremap.description');
-//echo "<pre>";var_dump($featuremap);echo "</pre>";
 
 // So that chado variables are returned in an array
 $options = array('return_array' => 1);
 
 $featuremap = chado_expand_var($featuremap, 'table', 'featuremapprop', $options);
 $properties = $featuremap->featuremapprop;
-//echo "<pre>";var_dump($properties);echo "</pre>";
+
 $more_rows = array();
 foreach ($properties as $property) {
   $property = chado_expand_var($property,'field','featuremapprop.value');
@@ -48,6 +47,19 @@ $rows[] = array(
   $featuremap->name
 );
 
+// Map download, if any
+$download_url = ($more_rows['Download URL']) 
+              ? '<a href="' . $more_rows['Download URL'] . '">download</a.' 
+              : 'not available';
+$rows[] = array(
+  array(
+    'data' => 'Download (CMap format)',
+    'header' => TRUE,
+    'width' => '20%',
+  ),
+  $download_url
+);
+
 // Publication publication map name
 $rows[] = array(
   array(
@@ -67,26 +79,32 @@ $rows[] = array(
 );
 
 
-// CMap link
-$cmap_link = 'none';
+// Map viewer links
+$map_viewer_links = array();;
 $featuremap = chado_expand_var($featuremap, 'table', 'featuremap_dbxref', $options);
 $dbxrefs = $featuremap->featuremap_dbxref;
 foreach ($dbxrefs as $dbxref) {
+  $urlprefix = $dbxref->dbxref_id->db_id->urlprefix;
+  $accession = $dbxref->dbxref_id->accession;
   if ($dbxref->dbxref_id->db_id->name == 'LIS:cmap') {
-    $urlprefix = $dbxref->dbxref_id->db_id->urlprefix;
-    $cmap_link = "<a href=\"$urlprefix" . $dbxref->dbxref_id->accession . '">';
-    $cmap_link .= 'CMap</a>';
-    break;
+    $link = "<a href=\"$urlprefix$accession\">";
+    $link .= 'CMap</a>';
+    $map_viewer_links[] = $link;
+  }
+  if ($dbxref->dbxref_id->db_id->name == 'cmap-js') {
+    $link = "<a href=\"$urlprefix$accession\">";
+    $link .= 'cmap-js</a>';
+    $map_viewer_links[] = $link;
   }
 }
+$urls = (count($map_viewer_links) > 0) ? implode(', ', $map_viewer_links) : 'none';
 $rows[] = array(
   array(
     'data' => 'Map view',
     'header' => TRUE
   ),
-  $cmap_link
+  $urls
 );
-
 
 // Get species from mapping population
 $species_array = array();

@@ -70,7 +70,6 @@ function legume_featuremap_views_pre_render(&$view) {
 }
 
 function legume_featuremap_views_query_alter($view, $query) {
-//drupal_set_message("<pre>" . print_r($view, true) . "</pre>");
   if ($view->name == 'tripal_featuremap_user_featuremaps') {
 /*would like to add citation, but unable to see how; leave this code in case a 
   solution is found.

@@ -61,10 +61,7 @@ $options = array(
 );
 
 $featuremap = chado_expand_var($featuremap, 'table', 'featurepos', $options);
-//echo "featuremap:<pre>";var_dump($featuremap);echo "</pre>";
 $feature_positions = $featuremap->featurepos;
-//echo "feature positions:<pre>";var_dump($feature_positions);echo "</pre>";
-
 
 // CUSTOMIZATION: limit features loaded to linkage_group features and don't 
 //                use pager.
@@ -159,8 +156,8 @@ if (count($feature_positions) > 0) { ?>
     }
 
 // HACK: since assuming feature is a linkage group and attaching 
-//       featureposprop records isn't working, create an an to hold 
-//       all information for a linkage group.
+//       featureposprop records isn't working, create an array to  
+//       hold all information for a linkage group.
 //    $rows[] = array(
 //      $mfname,
 //      $map_feature->type_id->name,
@@ -173,26 +170,30 @@ if (count($feature_positions) > 0) { ?>
     if (!isset($lgs[$position->map_feature_id->feature_id])) {
       $lg_feature = $position->map_feature_id;
       
-// CUSTOMIZATION: Get CMap linkout, if any
-      $cmap_link = 'none';
+// CUSTOMIZATION: Get map viewer linkouts, if any
       $lg_feature = chado_expand_var($lg_feature, 'table', 'feature_dbxref', 
                                  array('return_array' => 1)
       );
 
-      // Not a good solution: assumes there will be at most one feature_dbxref
-      //    and that it will be a CMap linkout.
+      $linkouts = array();
+      // Assumes linkouts will be CMap and/or cmap-js.
       if (count($lg_feature->feature_dbxref) > 0) {
-        $dbxref = $lg_feature->feature_dbxref[0]->dbxref_id;
-        if ($dbxref->accession != '') {
-          $url = $dbxref->db_id->urlprefix . $dbxref->accession;
-          $cmap_link = "<a href=\"$url\">CMap</a>";
-        }
+        foreach ($lg_feature->feature_dbxref as $feature_dbxref) {
+          $dbxref = $feature_dbxref->dbxref_id;
+          if ($dbxref->accession != '') {
+            $url = $dbxref->db_id->urlprefix . $dbxref->accession;
+            $linkout_name = ($dbxref->db_id->name == 'LIS:cmap') 
+                          ? 'CMap' : $dbxref->db_id->name;
+            $linkouts[] = "<a href=\"$url\">$linkout_name</a>";
+          }
+        }//each dbxref
       }
       
+      // The row
       $lgs[$position->map_feature_id->feature_id] = array(
         'name' => $fname,
         'type' => $feature->type_id->name,
-        'cmap' => $cmap_link,
+        'cmap' => (count($linkouts) > 0) ? implode (', ', $linkouts) : 'none',
         'mappos1' => $mappos,
         'unit' => $position->featuremap_id->unittype_id->name
       );
