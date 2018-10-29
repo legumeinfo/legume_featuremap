@@ -1,6 +1,10 @@
 array (
   'table' => 'featuremap_stock',
   'fields' => array(
+    'featuremap_stock_id' => array(
+      'type' => 'int',
+      'not null' => TRUE,
+    ),
     'featuremap_id' => array(
       'type' => 'int',
       'not null' => TRUE,
@@ -25,5 +29,6 @@ array (
      ),
   ),
   'primary key' => array('featuremap_stock_id'),
+  'primary key' => array('featurelocprop_id'),
 )
 
