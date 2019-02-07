@@ -17,9 +17,6 @@ foreach ($properties as $property) {
   $prop_type = $property->type_id->name;
   $more_rows[$prop_type] = $value = urldecode($property->value);
 }
-
-// Get stocks related to this map
-$stocks = getMapStocks($featuremap->featuremap_id);
 ?>
 
 <div class="tripal_featuremap-data-block-desc tripal-data-block-desc"></div> <?php 
@@ -97,6 +94,7 @@ foreach ($dbxrefs as $dbxref) {
     $map_viewer_links[] = $link;
   }
 }
+
 $urls = (count($map_viewer_links) > 0) ? implode(', ', $map_viewer_links) : 'none';
 $rows[] = array(
   array(
@@ -110,6 +108,7 @@ $rows[] = array(
 $species_array = array();
 $args = array('featuremap_id' => $featuremap->featuremap_id);
 $featuremap_stock = chado_generate_var('featuremap_stock', $args);
+//echo "Stocks associated with this map: <pre>";var_dump($featuremap_stock);echo "</pre>";
 if ($stock = $featuremap_stock->stock_id) {
   $args = array('stock_id' => $stock->stock_id);
   // create a new stock_organism chado variable
@@ -141,6 +140,9 @@ $rows[] = array(
   '<i>' . implode($species_array, ', ') . '</i>'
 );
 
+// Get stocks related to this map
+$stocks = getMapStocks($featuremap->featuremap_id);
+
 // Show mapping population
 $mapping_population = "unknown";
 if ($stocks->mapping_population) {
@@ -166,7 +168,7 @@ if ($stocks->parent1) {
     $parent1 = l($stocks->parent1, '/node/'.$stocks->parent1_nid);
   }
   else {
-    $parent1 = $stocks['parent1'];
+    $parent1 = $stocks->parent1;
   }
 }
 $rows[] = array(
@@ -182,7 +184,7 @@ if ($stocks->parent2) {
     $parent2 = l($stocks->parent2, '/node/'.$stocks->parent2_nid);
   } 
   else {
-    $parent2 = $stocks['parent2'];
+    $parent2 = $stocks->parent2;
   }
 }
 $rows[] = array(
