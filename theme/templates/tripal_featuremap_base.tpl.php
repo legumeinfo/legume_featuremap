@@ -180,7 +180,7 @@ if ($stocks->parent1) {
     $parent1 = l($stocks->parent1, '/node/'.$stocks->parent1_nid);
   }
   else {
-    $parent1 = $stocks['parent1'];
+    $parent1 = $stocks->parent1;
   }
 }
 $rows[] = array(
@@ -196,7 +196,7 @@ if ($stocks->parent2) {
     $parent2 = l($stocks->parent2, '/node/'.$stocks->parent2_nid);
   } 
   else {
-    $parent2 = $stocks['parent2'];
+    $parent2 = $stocks->parent2;
   }
 }
 $rows[] = array(
