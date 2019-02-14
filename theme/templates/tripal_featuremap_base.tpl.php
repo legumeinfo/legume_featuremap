@@ -17,9 +17,6 @@ foreach ($properties as $property) {
   $prop_type = $property->type_id->name;
   $more_rows[$prop_type] = $value = urldecode($property->value);
 }
-
-// Get stocks related to this map
-$stocks = getMapStocks($featuremap->featuremap_id);
 ?>
 
 <div class="tripal_featuremap-data-block-desc tripal-data-block-desc"></div> <?php 
@@ -78,6 +75,18 @@ $rows[] = array(
   $featuremap->unittype_id->name
 );
 
+// Feature count
+$sql = "SELECT count FROM {map_feature_count} WHERE map_name='" . $featuremap->name . "'";
+$res = chado_query($sql, array());
+$rec = $res->fetchAssoc();
+echo "<pre>";var_dump($rec);echo "</pre>";
+$rows[] = array(
+  array(
+    'data' => 'Feature Count',
+    'header' => TRUE
+  ),
+  $rec['count'],
+);
 
 // Map viewer links
 $map_viewer_links = array();;
@@ -97,6 +106,7 @@ foreach ($dbxrefs as $dbxref) {
     $map_viewer_links[] = $link;
   }
 }
+
 $urls = (count($map_viewer_links) > 0) ? implode(', ', $map_viewer_links) : 'none';
 $rows[] = array(
   array(
@@ -110,6 +120,7 @@ $rows[] = array(
 $species_array = array();
 $args = array('featuremap_id' => $featuremap->featuremap_id);
 $featuremap_stock = chado_generate_var('featuremap_stock', $args);
+//echo "Stocks associated with this map: <pre>";var_dump($featuremap_stock);echo "</pre>";
 if ($stock = $featuremap_stock->stock_id) {
   $args = array('stock_id' => $stock->stock_id);
   // create a new stock_organism chado variable
@@ -140,6 +151,9 @@ $rows[] = array(
   ),
   '<i>' . implode($species_array, ', ') . '</i>'
 );
+
+// Get stocks related to this map
+$stocks = getMapStocks($featuremap->featuremap_id);
 
 // Show mapping population
 $mapping_population = "unknown";
