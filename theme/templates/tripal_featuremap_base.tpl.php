@@ -79,7 +79,6 @@ $rows[] = array(
 $sql = "SELECT count FROM {map_feature_count} WHERE map_name='" . $featuremap->name . "'";
 $res = chado_query($sql, array());
 $rec = $res->fetchAssoc();
-echo "<pre>";var_dump($rec);echo "</pre>";
 $rows[] = array(
   array(
     'data' => 'Feature Count',
