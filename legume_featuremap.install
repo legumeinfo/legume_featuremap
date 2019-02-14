@@ -1,0 +1,48 @@
+<?php
+/**
+ * Implementation of hook_install().
+ *
+ * @ingroup legume_featuremap
+ */
+function legume_featuremap_install() {
+
+  // add the feature count view to Chado
+  $sql = "
+    SELECT m.name AS map_name, COUNT(f.feature_id) 
+    FROM featuremap m
+      INNER JOIN featurepos fp ON fp.featuremap_id=m.featuremap_id
+      INNER JOIN feature f ON f.feature_id=fp.feature_id
+    GROUP BY m.name";
+    
+   $schema = array(
+      'table' => 'map_feature_count',
+      'fields' => array(
+        'map_name' => array(
+          'type' => 'text',
+          'not null' => false,
+        ),
+        'count' => array(
+          'type' => 'int',
+          'not null' => false,
+        ), 
+      ),
+      'indexes' => array(
+        'map_feature_count_indx0' => array(
+          0 => 'map_name',
+        ),
+      ), 
+    );
+  
+    // add a comment to make sure this view makes sense to the site administator
+    $comment = t('This view counts the number of features on each map. 
+                  The view is queried by the legume_featuremap module and will need to be repopulated each time map data is added or changed.');
+  
+    
+    tripal_add_mview(
+      'map_feature_count', // name of materialized view
+      'legume_featuremap', // name of module submitting view
+      $schema,             // schema api array representation
+      $sql,                // sql query that loads the mview
+      $comment 
+    );
+}
